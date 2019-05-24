@@ -1,0 +1,7 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/note3crafter/BlockPower
+branches:
+- master
+projects:
+  BlockPower:
+    path: ""
+...

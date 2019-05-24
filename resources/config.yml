@@ -1,0 +1,11 @@
+# BlockPower Confiq.
+# By TheNote.
+
+# Boost Block ID. ID list: http://minecraft-ids.grahamedgecombe.com/
+Block: 152
+
+# BlockPower
+BlockPower: 0.8
+
+# Aktibiere/Deaktiviere Feuerparticle. 
+Particle: true

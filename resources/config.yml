@@ -1,11 +1,12 @@
-# BlockPower Confiq.
-# By TheNote.
+---
+# BlockPower Config
 
-# BlockPower ID. ID list: http://minecraft-ids.grahamedgecombe.com/
+# Set here the Block do you want
 Block: 152
 
-# BlockPower Stärke
-BlockPower: 0.8
+# Knockback Power
+KnockbackPower: 0.8
 
-# Aktiviere/Deaktiviere Feuerparticle. 
-Particle: true
+# Enable/Diasble Flameparticle.
+FlameParticle: true
+...

@@ -4,50 +4,39 @@ namespace TheNote\BlockPower;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
-use pocketmine\level\Level;
-use pocketmine\level\Position;
-use pocketmine\level\particle\Particle;
-use pocketmine\level\particle\FlameParticle;
 use pocketmine\utils\Config;
-use pocketmine\utils\TextFormat as C;
-use pocketmine\Player;
 use pocketmine\event\player\PlayerMoveEvent;
-use pocketmine\Server;
 use pocketmine\math\Vector3;
-use pocketmine\block\Block;
+use pocketmine\world\particle\FlameParticle;
 
-class Main extends PluginBase implements Listener {
-	
-	public function onEnable(){
-		$this->getServer()->getPluginManager()->registerEvents($this ,$this);
-		$this->saveDefaultConfig();
-		$this->config = $this->getConfig();
-		$this->getLogger()->info(C::GREEN."PowerBlock Aktiviert!");
-	}
-	
-	public function onMove(PlayerMoveEvent $event){
-		$player = $event->getPlayer();
-		$x = $player->getX();
-		$y = $player->getY();
-		$z = $player->getZ();
-		$level = $player->getLevel();
-		$block = $level->getBlock($player->getSide(0));
-		if($block->getID() == $this->config->get('Block')){
-			$direction = $player->getDirectionVector();
-			$dx = $direction->getX();
-			$dz = $direction->getZ();
-			if($this->config->get("Particle") == "true"){
-				$level->addParticle(new FlameParticle($player));
-				$level->addParticle(new FlameParticle(new Vector3($x-0.3, $y, $z)));
-				$level->addParticle(new FlameParticle(new Vector3($x, $y, $z-0.3)));
-				$level->addParticle(new FlameParticle(new Vector3($x+0.3, $y, $z)));
-				$level->addParticle(new FlameParticle(new Vector3($x, $y, $z+0.3)));
-			}
-			$player->knockBack($player, 0, $dx, $dz, $this->config->get('BlockPower'));
-		}
-	}
-	
-	public function onDisable(){
-		$this->getLogger()->info(C::RED."PowerBlock Deaktiviert!");
-	}
+class Main extends PluginBase implements Listener
+{
+    public function onEnable(): void
+    {
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
+        $this->saveResource("Config.yml", false);
+    }
+
+    public function onMove(PlayerMoveEvent $event)
+    {
+        $config = new Config($this->getDataFolder() . Main::$setup . "Config" . ".yml", Config::YAML);
+        $player = $event->getPlayer();
+        $x = $player->getLocation()->getX();
+        $y = $player->getLocation()->getY();
+        $z = $player->getLocation()->getZ();
+        $world = $player->getWorld();
+        $block = $world->getBlock($player->getPosition()->getSide(0));
+        if ($block->getID() == $config->get("Block")) {
+            $direction = $player->getDirectionVector();
+            $dx = $direction->getX();
+            $dz = $direction->getZ();
+            if ($config->get("FlameParticle") === true) {
+                $world->addParticle(new Vector3($x - 0.3, $y, $z), new FlameParticle);
+                $world->addParticle(new Vector3($x, $y, $z - 0.3), new FlameParticle);
+                $world->addParticle(new Vector3($x + 0.3, $y, $z), new FlameParticle);
+                $world->addParticle(new Vector3($x, $y, $z + 0.3), new FlameParticle);
+            }
+            $player->knockBack($dx, $dz, $config->get("KnockbackPower"), 0);
+        }
+    }
 }
